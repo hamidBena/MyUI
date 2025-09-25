@@ -3,6 +3,7 @@
 namespace myui{
 
     void Element::update(const float dt) {
+        if(!enabled) return;
         if (onTick) onTick(*this, dt);
 
         if (hovered) {
@@ -22,7 +23,6 @@ namespace myui{
 
     void Element::handleEvent(const sf::Event& event, const sf::RenderWindow& window) {
         if(!enabled) return;
-
         if (event.is<sf::Event::MouseMoved>()) {
             if (auto* data = event.getIf<sf::Event::MouseMoved>()) {
                 if (!hovered && getBounds().contains(sf::Vector2f(data->position))) {
@@ -55,6 +55,7 @@ namespace myui{
     }
 
     void Element::draw(sf::RenderTarget& target, sf::RenderStates states) {
+        if(!enabled || !visible) return;
         if((e_renderMode == renderMode::SchemeColors || e_renderMode == renderMode::SingleTextureTinted) && e_texture == nullptr) return;
 
         if(e_renderMode == renderMode::SingleTextureTinted) {

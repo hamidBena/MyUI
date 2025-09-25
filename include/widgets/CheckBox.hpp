@@ -120,7 +120,7 @@ namespace myui {
             //label handling
             sf::Text label(*e_font, e_label, e_labelSize);
             label.setFillColor(e_scheme.text);
-            label.setPosition(e_position + e_padding + sf::Vector2f(30, -5));
+            label.setPosition(e_position + e_padding + sf::Vector2f(30, -7.5));
 
             target.draw(body);
             target.draw(box);

@@ -12,6 +12,8 @@ namespace myui {
         }
 
         void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
+            if(!visible || !enabled) return;
+
             sf::RectangleShape shape(e_size);
             shape.setPosition(e_position);
             shape.setFillColor(e_scheme.background);
@@ -21,6 +23,8 @@ namespace myui {
         }
 
         void handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
+            if(!enabled) return;
+            
             Container::handleEvent(event, window);
             if (event.is<sf::Event::Resized>()){
                 e_size = sf::Vector2f(window.getSize());

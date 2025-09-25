@@ -20,12 +20,12 @@ namespace myui{
     public:
     inline static int ElementCount = 0;
 
-    protected:
+    public:
     //layout
     sf::Vector2f e_position = {0, 0};
     sf::Vector2f e_offset   = {0, 0};                         
     sf::Vector2f e_size     = {150, 50};                      
-    sf::Vector2f e_padding  = {5, 5};                         
+    sf::Vector2f e_padding  = {10, 10};                         
     sizeTypes e_sizeType = sizeTypes::fitContent;             
 
     //style
@@ -64,13 +64,13 @@ namespace myui{
     bool debug = false;
 
     public:                                                                                     sf::Vector2f getPosition() {return e_position;}
-        void setOffset(const sf::Vector2f& offset){e_offset = offset;}                          sf::Vector2f getOffset() {return e_offset;}
-        void setSize(const sf::Vector2f& size){e_size = size;}                                  sf::Vector2f getSize() {return e_size;}
-        void setPadding(const sf::Vector2f& padding){e_padding = padding;}                      sf::Vector2f getPadding() {return e_padding;}
-        void setSizeType(const sizeTypes& type){e_sizeType = type;}                             sizeTypes getSizeType() {return e_sizeType;}
+        Element& setOffset(const sf::Vector2f& offset){e_offset = offset; return *this;}        sf::Vector2f getOffset() {return e_offset;}
+        Element& setSize(const sf::Vector2f& size){e_size = size; return *this;}                sf::Vector2f getSize() {return e_size;}
+        Element& setPadding(const sf::Vector2f& padding){e_padding = padding; return *this;}    sf::Vector2f getPadding() {return e_padding;}
+        Element& setSizeType(const sizeTypes& type){e_sizeType = type; return *this;}           sizeTypes getSizeType() {return e_sizeType;}
         virtual void setScheme(const ColorScheme& scheme){e_scheme = scheme;}                   ColorScheme getScheme() {return e_scheme;}
         void setTintScheme(const ColorScheme& scheme){e_tintScheme = scheme;}                   ColorScheme getTintScheme() {return e_tintScheme;}
-        void setRenderMode(const renderMode& mode);                                             renderMode getRenderMode() {return e_renderMode;}
+        void setRenderMode(const renderMode& mode){e_renderMode = mode;}                        renderMode getRenderMode() {return e_renderMode;}
         void setVisible(bool visible){this->visible = visible;}                                 bool isVisible() {return visible;}
         void setEnabled(bool enabled){this->enabled = enabled;}                                 bool isEnabled() {return enabled;}
         void setLabel(const std::string& label){e_label = label;}                               std::string getLabel() {return e_label;}
@@ -95,7 +95,7 @@ namespace myui{
     public:
     //hierarchy
     Element* parent = nullptr;
-    
+
     virtual void update(const float dt);
     virtual void handleEvent(const sf::Event& event, const sf::RenderWindow& window);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
@@ -119,11 +119,13 @@ public:
 
     //override to pass data to children
     void update(const float dt) override {
+        if(!enabled) return;
         Element::update(dt);
         passUpdate(dt);
     }
 
     void handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
+        if(!enabled) return;
         Element::handleEvent(event, window);
         passEvent(event, window);
     }
