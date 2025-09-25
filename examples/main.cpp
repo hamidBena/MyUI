@@ -3,17 +3,31 @@
 #include <iostream>
 
 int main() {
-    // Create SFML window (SFML 3.x way)
-    sf::RenderWindow window(sf::VideoMode({800u, 600u}), "MyUI Example");
+    sf::RenderWindow window(sf::VideoMode({2000u, 1200u}), "MyUI Example");
+    window.setFramerateLimit(60);
 
     myui::GUI myUI;
-
-    auto button2 = myUI.CreateElement<myui::widgets::Button>(sf::Vector2f(100, 100));
     
+    auto canvas = myUI.createContainer<myui::containers::Canvas>(window);
+    canvas->setPadding({10, 10});
+
+    auto button1 = canvas->CreateElement<myui::widgets::Button>();
+    button1->setOffset({0, 80});
+    button1->setSizeType(myui::sizeTypes::fitContent);
+
+    auto label1 = canvas->CreateElement<myui::widgets::Label>();
+    label1->setLabel("hello this is a labe!\ndoes the multi line work? lets test it out :)");
+
+    auto checkbox1 = canvas->CreateElement<myui::widgets::CheckBox>();
+    checkbox1->setOffset({10, 150});
+
+    checkbox1->setOnToggle([&canvas](myui::Element& widget, auto& boolean){
+        if(boolean) canvas->setScheme(myui::DefaultSchemes::light());
+        else        canvas->setScheme(myui::DefaultSchemes::dark());
+    });
 
     sf::Clock clock;
     while (window.isOpen()) {
-        // Handle events
         while (const std::optional event = window.pollEvent())
         {
             // Window closed or escape key pressed: exit
@@ -24,7 +38,6 @@ int main() {
             myUI.handleEvent(*event, window);
         }
 
-        // Clear + draw
         window.clear(sf::Color::Black);
 
         float dt = clock.getElapsedTime().asSeconds();

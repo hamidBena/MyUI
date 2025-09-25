@@ -9,7 +9,7 @@ find_package(SFML CONFIG REQUIRED COMPONENTS Graphics Window System)
 # Build static library from src/
 add_library(MyUI STATIC
     src/Element.cpp
-
+    src/assetManager.cpp
     # add more source files here
 )
 

@@ -8,33 +8,35 @@
 #include <SFML/Graphics.hpp>
 
 #include "Element.hpp"
-#include "widgets/Button.hpp"
+#include "utils/env.hpp"
+#include "utils/assetManager.hpp"
+
+#include "widgets/widgets.hpp"
+#include "containers/containers.hpp"
 
 namespace myui{
 
-
 class GUI {
 public:
-    //std::shared_ptr<UIRoot> CreateRoot();
-
-    template <typename T, typename... Args>
-    std::unique_ptr<T> CreateElement(Args&&... args) {
-        static_assert(std::is_base_of_v<Element, T>, "T must derive from Element");
-        return std::make_unique<T>(std::forward<Args>(args)...);
-    }
-
     template <typename T, typename... Args>
     T* createContainer(Args&&... args) {
         static_assert(std::is_base_of_v<Container, T>, "T must derive from Container");
-        auto container = CreateElement<T>(std::forward<Args>(args)...);
+        auto container = std::make_unique<T>(std::forward<Args>(args)...);
         auto ptr = container.get();
         elements.push_back(std::move(container));
         return ptr;
     }
 
     void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) {
-        for (auto& element : elements)
+        sf::View oldView = target.getView();
+        sf::Vector2u winSize = target.getSize();
+        sf::View uiView = sf::View(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(winSize)));
+        target.setView(uiView);
+        for (auto& element : elements){
+            element->layoutPass();
             element->draw(target, states);
+        }
+        target.setView(oldView);
     }
     void update(const float dt) {
         for (auto& element : elements)
@@ -46,7 +48,7 @@ public:
     }
 
 private:
-    std::vector<std::unique_ptr<Element>> elements;
+    std::vector<std::unique_ptr<Container>> elements;
 
 };
 
