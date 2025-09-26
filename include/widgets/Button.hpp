@@ -21,11 +21,11 @@ namespace myui {
             Element::sizePass();
             if(e_sizeType == sizeTypes::fitContent){
                 if(e_renderMode == renderMode::SingleTextureTinted){
-                    e_size = sf::Vector2f(e_texture->getSize());
+                    setSize(sf::Vector2f(e_texture->getSize()));
                 }else{
                     sf::Text label(*e_font, e_label, e_labelSize);
                     auto size = label.getLocalBounds().size;
-                    e_size = size + sf::Vector2f(e_padding.x * 4, e_padding.y * 4);
+                    setSize(size + sf::Vector2f(e_padding.x * 4, e_padding.y * 4));
                 }
             }
         }
@@ -33,7 +33,7 @@ namespace myui {
         private:
         void drawShape(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default){
             sf::RectangleShape button(e_size);
-            button.setPosition(e_position);
+            button.setPosition(intr_position);
 
             //color handling
             if(hovered)  button.setFillColor(e_scheme.hover);
@@ -52,7 +52,7 @@ namespace myui {
             //label handling
             sf::Text label(*e_font, e_label, e_labelSize);
             label.setFillColor(e_scheme.text);
-            label.setPosition(e_position + e_padding);
+            label.setPosition(intr_position.getValue() + e_padding);
 
             target.draw(button);
             target.draw(label);

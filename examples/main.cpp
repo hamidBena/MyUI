@@ -28,17 +28,20 @@ int main() {
     auto checkbox1 = Hlayout->CreateElement<myui::widgets::CheckBox>();
     checkbox1->setOffset({10, 150});
 
-    Vlayout->setOnTick([Vlayout](myui::Element& widget, const float& dt){
-        static float elapsed = 0;
-        elapsed += dt;
+    Vlayout->setOnClick([canvas](myui::Element& widget, const float& dt){
+        widget.e_offset.x += 200 * dt;
+    });
 
-        Vlayout->spacing = sin(elapsed * 5) * 30 + 30;
+    button1->setOnClick([Vlayout](myui::Element& widget, const float& dt){
+        Vlayout->spacing += 10;
     });
 
     checkbox1->setOnToggle([&canvas](myui::Element& widget, auto& boolean){
         if(boolean) canvas->setScheme(myui::DefaultSchemes::light());
         else        canvas->setScheme(myui::DefaultSchemes::dark());
     });
+
+    canvas->setDebuggingMode(true);
 
     sf::Clock clock;
     while (window.isOpen()) {
@@ -54,8 +57,7 @@ int main() {
 
         window.clear(sf::Color::Black);
 
-        float dt = clock.getElapsedTime().asSeconds();
-        clock.restart();
+        float dt = clock.restart().asSeconds();
 
         myUI.update(dt);
         myUI.draw(window);

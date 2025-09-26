@@ -27,18 +27,18 @@ namespace myui {
             if(debug) drawDebug(target, states);
         }
 
-        void handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
-            if(auto release = event.getIf<sf::Event::MouseButtonReleased>()){
-                if(release->button == sf::Mouse::Button::Left && held){
-                    if(getBounds().contains(sf::Vector2f(release->position))){
-                        checked = !checked;
-                        if(onToggle) onToggle(*this, checked);
+        bool handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
+            if (auto release = event.getIf<sf::Event::MouseButtonReleased>()) {
+                if (release->button == sf::Mouse::Button::Left && held) {
+                    if (getBounds().contains(sf::Vector2f(release->position))) {
+                        checked = !checked; // toggle state
+                        if (onToggle) onToggle(*this, checked);
                     }
                 }
             }
-            Element::handleEvent(event, window);
-        }
 
+            return Element::handleEvent(event, window);
+        }
 
         // widget optional overrides
         void sizePass() override {
@@ -46,15 +46,16 @@ namespace myui {
             if(e_sizeType == sizeTypes::fitContent){
                 sf::Text label(*e_font, e_label, e_labelSize);
                 auto size = label.getLocalBounds().size;
-                e_size = size + sf::Vector2f(40 + e_padding.x, 0);
+                setSize(size + sf::Vector2f(40 + e_padding.x, 0));
                 if(e_size.y < 25 ) e_size.y = 25;
             }
 
             outerBox.size = e_size;
             innerBox.size = {25, 25};
 
-            outerBox.position = e_position;
-            innerBox.position = e_position;
+            outerBox.position = intr_position;
+            innerBox.position = intr_position;
+
         }
 
         sf::FloatRect getBounds() override {
@@ -96,9 +97,9 @@ namespace myui {
             sf::RectangleShape box(innerBox.size);
             sf::RectangleShape body(sf::Vector2f(outerBox.size));
 
-            box.setPosition(e_position);
+            box.setPosition(intr_position);
 
-            body.setPosition(e_position);
+            body.setPosition(intr_position);
             body.setFillColor(e_scheme.foreground);
             body.setOutlineColor(e_scheme.border);
             body.setOutlineThickness(1);
@@ -120,7 +121,7 @@ namespace myui {
             //label handling
             sf::Text label(*e_font, e_label, e_labelSize);
             label.setFillColor(e_scheme.text);
-            label.setPosition(e_position + e_padding + sf::Vector2f(30, -7.5));
+            label.setPosition(intr_position.getValue() + e_padding + sf::Vector2f(30, -7.5));
 
             target.draw(body);
             target.draw(box);
@@ -130,18 +131,17 @@ namespace myui {
         void drawCheckMark(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default){
             sf::Sprite mark(*checkMark);
 
-            sf::FloatRect rect = getBounds();
             sf::Vector2u texSize = checkMark->getSize();
 
             float texW = static_cast<float>(texSize.x);
             float texH = static_cast<float>(texSize.y);
 
             // Scale texture to fit rect
-            float scaleX = rect.size.x  / texW;
-            float scaleY = rect.size.y / texH;
+            float scaleX = innerBox.size.x  / texW;
+            float scaleY = innerBox.size.y / texH;
 
             mark.setScale(sf::Vector2f(scaleX, scaleY));
-            mark.setPosition(rect.position);
+            mark.setPosition(innerBox.position);
 
             if(hovered) mark.setColor(e_tintScheme.hover);
             else mark.setColor(e_tintScheme.foreground);

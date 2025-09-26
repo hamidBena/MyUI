@@ -22,7 +22,7 @@ namespace myui {
             if(e_sizeType == sizeTypes::fitContent){
                 sf::Text label(*e_font, e_label, e_labelSize);
                 auto size = label.getLocalBounds().size;
-                e_size = size + sf::Vector2f(e_padding.x * 4, e_padding.y * 4);
+                setSize(size + sf::Vector2f(e_padding.x * 4, e_padding.y * 4));
             }
         }
 
@@ -31,7 +31,7 @@ namespace myui {
             //label handling
             sf::Text label(*e_font, e_label, e_labelSize);
             label.setFillColor(e_scheme.text);
-            label.setPosition(e_position + e_padding);
+            label.setPosition(intr_position.getValue() + e_padding);
             target.draw(label);
         }
     };

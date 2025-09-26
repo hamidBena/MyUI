@@ -7,7 +7,7 @@ namespace myui {
         public:
 
         Canvas(const sf::RenderWindow& window) {
-            e_size = sf::Vector2f(window.getSize());
+            setSize(sf::Vector2f(window.getSize()));
             e_padding = {0,0};
         }
 
@@ -22,13 +22,12 @@ namespace myui {
             passDraw(target, states);
         }
 
-        void handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
-            if(!enabled) return;
-            
-            Container::handleEvent(event, window);
+        bool handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
+            if(!enabled) return false;
             if (event.is<sf::Event::Resized>()){
-                e_size = sf::Vector2f(window.getSize());
+                setSize(sf::Vector2f(window.getSize()));
             }
+            return Container::handleEvent(event, window);
         }
 
     };

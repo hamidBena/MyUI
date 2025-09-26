@@ -21,8 +21,8 @@ namespace myui{
         }
     }
 
-    void Element::handleEvent(const sf::Event& event, const sf::RenderWindow& window) {
-        if(!enabled) return;
+    bool Element::handleEvent(const sf::Event& event, const sf::RenderWindow& window) {
+        if(!enabled) return false;
         if (event.is<sf::Event::MouseMoved>()) {
             if (auto* data = event.getIf<sf::Event::MouseMoved>()) {
                 if (!hovered && getBounds().contains(sf::Vector2f(data->position))) {
@@ -38,6 +38,7 @@ namespace myui{
         if(auto click = event.getIf<sf::Event::MouseButtonPressed>()){
             if(click->button == sf::Mouse::Button::Left && getBounds().contains(sf::Vector2f(click->position))){
                 held = true;
+                return true;
             }
         }
         
@@ -50,8 +51,10 @@ namespace myui{
                 if(onRelease) onRelease(*this, heldDuration);
 
                 held = false;
+                return true;
             }
         }
+        return false;
     }
 
     void Element::draw(sf::RenderTarget& target, sf::RenderStates states) {
@@ -90,10 +93,9 @@ namespace myui{
 
     void Element::layoutPass() {
         if(parent)
-            e_position = parent->e_position + parent->e_padding + e_offset;
+            setPosition(parent->e_position + parent->e_padding + e_offset);
         else 
-            e_position = e_offset;
-
+            setPosition(e_offset);
         sizePass();
     }
 
@@ -103,7 +105,7 @@ namespace myui{
         static sf::Color idle = sf::Color::Transparent;
         //hitbox info
         sf::RectangleShape hitbox(getBounds().size);
-        hitbox.setPosition(e_position);
+        hitbox.setPosition(intr_position);
         hitbox.setFillColor(sf::Color::Transparent);
         hitbox.setOutlineColor(sf::Color::Red);
         hitbox.setOutlineThickness(1);

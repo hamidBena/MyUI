@@ -10,8 +10,8 @@ namespace myui {
 
             Container::draw(target, states);
             if(e_renderMode == renderMode::SchemeColors){
-                sf::RectangleShape shape(e_size);
-                shape.setPosition(e_position);
+                sf::RectangleShape shape(intr_size);
+                shape.setPosition(intr_position);
                 shape.setFillColor(e_scheme.background);
                 shape.setOutlineColor(e_scheme.border);
                 shape.setOutlineThickness(1);
@@ -25,7 +25,7 @@ namespace myui {
             float h = 0;
             for(auto& child : children){
                 if(!child->enabled || !child->visible) continue;
-                child->e_position = sf::Vector2f(e_position.x + h, e_position.y) + e_padding;
+                child->setPosition(sf::Vector2f(e_position.x + h, e_position.y) + e_padding);
                 h += child->e_size.x + spacing;
                 child->sizePass();
             }
@@ -42,8 +42,8 @@ namespace myui {
                     if(child->e_size.y > maxHeight) maxHeight = child->e_size.y;
                     width += child->e_size.x + spacing;
                 }
-                e_size.y = maxHeight + e_padding.y * 2;
-                e_size.x = width + e_padding.x * 2 - spacing; // -spacing to remove the last extra spacing added at the last ranged loop iteration
+
+                setSize(sf::Vector2f(width + e_padding.x * 2 - spacing, maxHeight + e_padding.y * 2));
             }
         }
 

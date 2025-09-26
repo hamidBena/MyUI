@@ -63,21 +63,24 @@ namespace myui{
     //debugging 
     bool debug = false;
 
-    public:                                                                                     sf::Vector2f getPosition() {return e_position;}
-        Element& setOffset(const sf::Vector2f& offset){e_offset = offset; return *this;}        sf::Vector2f getOffset() {return e_offset;}
-        Element& setSize(const sf::Vector2f& size){e_size = size; return *this;}                sf::Vector2f getSize() {return e_size;}
-        Element& setPadding(const sf::Vector2f& padding){e_padding = padding; return *this;}    sf::Vector2f getPadding() {return e_padding;}
-        Element& setSizeType(const sizeTypes& type){e_sizeType = type; return *this;}           sizeTypes getSizeType() {return e_sizeType;}
-        virtual void setScheme(const ColorScheme& scheme){e_scheme = scheme;}                   ColorScheme getScheme() {return e_scheme;}
-        void setTintScheme(const ColorScheme& scheme){e_tintScheme = scheme;}                   ColorScheme getTintScheme() {return e_tintScheme;}
-        void setRenderMode(const renderMode& mode){e_renderMode = mode;}                        renderMode getRenderMode() {return e_renderMode;}
-        void setVisible(bool visible){this->visible = visible;}                                 bool isVisible() {return visible;}
-        void setEnabled(bool enabled){this->enabled = enabled;}                                 bool isEnabled() {return enabled;}
-        void setLabel(const std::string& label){e_label = label;}                               std::string getLabel() {return e_label;}
-        void setLabelSize(float size){e_labelSize = size;}                                      float getLabelSize() {return e_labelSize;}
-        void setFont(std::unique_ptr<sf::Font> font){e_font = std::move(font);}                 sf::Font* getFont() {return e_font.get();}
-        void setTexture(std::unique_ptr<sf::Texture> texture){e_texture = std::move(texture);}  sf::Texture* getTexture() {return e_texture.get();}
-        virtual void setDebuggingMode(bool bug){ debug = bug; }                                 bool isDebuggingMode() {return debug;}
+    public:
+        Element& setPosition(const sf::Vector2f& position){e_position = position;
+                                         intr_position = position; return *this;}                   sf::Vector2f getPosition() {return e_position;}
+
+        Element& setOffset(const sf::Vector2f& offset){e_offset = offset; return *this;}            sf::Vector2f getOffset() {return e_offset;}
+        Element& setSize(const sf::Vector2f& size){e_size = size; intr_size = size; return *this;}  sf::Vector2f getSize() {return e_size;}
+        Element& setPadding(const sf::Vector2f& padding){e_padding = padding; return *this;}        sf::Vector2f getPadding() {return e_padding;}
+        Element& setSizeType(const sizeTypes& type){e_sizeType = type; return *this;}               sizeTypes getSizeType() {return e_sizeType;}
+        virtual void setScheme(const ColorScheme& scheme){e_scheme = scheme;}                       ColorScheme getScheme() {return e_scheme;}
+        void setTintScheme(const ColorScheme& scheme){e_tintScheme = scheme;}                       ColorScheme getTintScheme() {return e_tintScheme;}
+        void setRenderMode(const renderMode& mode){e_renderMode = mode;}                            renderMode getRenderMode() {return e_renderMode;}
+        void setVisible(bool visible){this->visible = visible;}                                     bool isVisible() {return visible;}
+        void setEnabled(bool enabled){this->enabled = enabled;}                                     bool isEnabled() {return enabled;}
+        void setLabel(const std::string& label){e_label = label;}                                   std::string getLabel() {return e_label;}
+        void setLabelSize(float size){e_labelSize = size;}                                          float getLabelSize() {return e_labelSize;}
+        void setFont(std::unique_ptr<sf::Font> font){e_font = std::move(font);}                     sf::Font* getFont() {return e_font.get();}
+        void setTexture(std::unique_ptr<sf::Texture> texture){e_texture = std::move(texture);}      sf::Texture* getTexture() {return e_texture.get();}
+        virtual void setDebuggingMode(bool bug){ debug = bug; }                                     bool isDebuggingMode() {return debug;}
 
         bool isHovered() {return hovered;}
         bool isHeld() {return held;}
@@ -97,7 +100,7 @@ namespace myui{
     Element* parent = nullptr;
 
     virtual void update(const float dt);
-    virtual void handleEvent(const sf::Event& event, const sf::RenderWindow& window);
+    virtual bool handleEvent(const sf::Event& event, const sf::RenderWindow& window);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
     virtual sf::FloatRect getBounds() {return sf::FloatRect(e_position, e_size);}
@@ -110,7 +113,14 @@ namespace myui{
     virtual void drawDebug(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
     virtual ~Element() = default; 
-    Element() {ElementCount++;}
+    Element() {
+        ElementCount++;
+        intr_position.setDuration(0.25f);
+        intr_size.setDuration(0.25f);
+
+        intr_size = e_size;
+        intr_position = e_position;
+    }
 };
 
 class Container : public Element {
@@ -124,19 +134,17 @@ public:
         passUpdate(dt);
     }
 
-    void handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
-        if(!enabled) return;
-        Element::handleEvent(event, window);
-        passEvent(event, window);
+    bool handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
+        if(!enabled) return false;
+        for (auto& child : children)
+            if(child->handleEvent(event, window)) return true;
+
+        return Element::handleEvent(event, window);
     }
 
     void passUpdate(const float dt) {
         for (auto& child : children)
             child->update(dt);
-    }
-    void passEvent(const sf::Event& event, const sf::RenderWindow& window) {
-        for (auto& child : children)
-            child->handleEvent(event, window);
     }
     void passDraw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) {
         for (auto& child : children)

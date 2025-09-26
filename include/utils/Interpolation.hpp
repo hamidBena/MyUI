@@ -9,9 +9,9 @@ enum class InterpolationType {
 
 inline float easeInOutElastic(float x) {
     const float c5 = (2 * 3.14159) / 4.5f;
-    if (x == 0.0f)
+    if (x <= 0.0f)
         return 0.0f;
-    else if (x == 1.0f)
+    else if (x >= 1.0f)
         return 1.0f;
     else if (x < 0.5f)
         return -0.5f * std::pow(2.0f, 20.0f * x - 10.0f) * std::sin((20.0f * x - 11.125f) * c5);
