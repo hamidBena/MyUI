@@ -5,10 +5,10 @@ namespace myui {
 
     class HLayout : public Container {
         public:
-        void draw(sf::RenderTarget& target) override {
+        void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
             if(!visible || !enabled) return;
 
-            Container::draw(target);
+            Container::draw(target, states);
             if(e_renderMode == renderMode::SchemeColors){
                 sf::RectangleShape shape(intr_size);
                 shape.setPosition(intr_position);
@@ -17,7 +17,7 @@ namespace myui {
                 shape.setOutlineThickness(1);
                 target.draw(shape);
             }
-            passDraw(target);
+            passDraw(target, states);
         }
 
         void layoutPass() override {

@@ -27,14 +27,14 @@ public:
         return ptr;
     }
 
-    void draw(sf::RenderTarget& target) {
+    void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) {
         sf::View oldView = target.getView();
         sf::Vector2u winSize = target.getSize();
         sf::View uiView = sf::View(sf::FloatRect(sf::Vector2f(0, 0), sf::Vector2f(winSize)));
         target.setView(uiView);
         for (auto& element : elements){
             element->layoutPass();
-            element->draw(target);
+            element->draw(target, states);
         }
         target.setView(oldView);
     }

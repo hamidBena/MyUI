@@ -101,7 +101,7 @@ namespace myui{
 
     virtual void update(const float dt);
     virtual bool handleEvent(const sf::Event& event, const sf::RenderWindow& window);
-    virtual void draw(sf::RenderTarget& target);
+    virtual void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
     virtual sf::FloatRect getBounds() {return sf::FloatRect(e_position, e_size);}
 
@@ -110,7 +110,7 @@ namespace myui{
         if(e_sizeType == sizeTypes::absolute) return;
     }
 
-    virtual void drawDebug(sf::RenderTarget& target);
+    virtual void drawDebug(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
     virtual ~Element() = default; 
     Element() {
@@ -146,9 +146,9 @@ public:
         for (auto& child : children)
             child->update(dt);
     }
-    void passDraw(sf::RenderTarget& target) {
+    void passDraw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) {
         for (auto& child : children)
-            child->draw(target);
+            child->draw(target, states);
     }
 
     template <typename T, typename... Args>

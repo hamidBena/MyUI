@@ -9,12 +9,12 @@ namespace myui {
             e_sizeType = sizeTypes::fitContent;
         }
 
-        void draw(sf::RenderTarget& target) override {
-            Element::draw(target);
+        void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
+            Element::draw(target, states);
             
-            drawShape(target);
+            drawShape(target, states);
             
-            if(debug) drawDebug(target);
+            if(debug) drawDebug(target, states);
         }
 
         void sizePass() override {
@@ -27,7 +27,7 @@ namespace myui {
         }
 
         private:
-        void drawShape(sf::RenderTarget& target){
+        void drawShape(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default){
             //label handling
             sf::Text label(*e_font, e_label, e_labelSize);
             label.setFillColor(e_scheme.text);
