@@ -9,12 +9,12 @@ namespace myui {
             e_sizeType = sizeTypes::absolute;
         }
 
-        void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
-            Element::draw(target, states);
+        void draw(sf::RenderTarget& target) override {
+            Element::draw(target);
             if(e_renderMode == renderMode::SchemeColors){
-                drawShape(target, states);
+                drawShape(target);
             }
-            if(debug) drawDebug(target, states);
+            if(debug) drawDebug(target);
         }
 
         void sizePass() override {
@@ -31,7 +31,7 @@ namespace myui {
         }
 
         private:
-        void drawShape(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default){
+        void drawShape(sf::RenderTarget& target){
             if(!enabled || !visible) return;
             sf::RectangleShape button(e_size);
             button.setPosition(intr_position);

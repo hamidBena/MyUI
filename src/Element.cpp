@@ -56,7 +56,7 @@ namespace myui{
         return false;
     }
 
-    void Element::draw(sf::RenderTarget& target, sf::RenderStates states) {
+    void Element::draw(sf::RenderTarget& target) {
         if(!enabled || !visible) return;
         if((e_renderMode == renderMode::SchemeColors || e_renderMode == renderMode::SingleTextureTinted) && e_texture == nullptr) return;
 
@@ -96,7 +96,7 @@ namespace myui{
         sizePass();
     }
 
-    void Element::drawDebug(sf::RenderTarget& target, sf::RenderStates states) {
+    void Element::drawDebug(sf::RenderTarget& target) {
         if(!enabled || !visible) return;
         static sf::Color hover = {0, 0, 200, 100};
         static sf::Color disable = {200, 0, 0, 100};

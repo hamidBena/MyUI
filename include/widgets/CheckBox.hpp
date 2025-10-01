@@ -13,18 +13,18 @@ namespace myui {
                                              }else{checkMark = std::make_unique<sf::Texture>(AssetManager::get().getTexture("textures/CheckMark.png"));}
         }
 
-        void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
-            Element::draw(target, states);
+        void draw(sf::RenderTarget& target) override {
+            Element::draw(target);
             if(e_renderMode == renderMode::SchemeColors){
-                drawShape(target, states);
+                drawShape(target);
             }
 
             //check mark
             if(checked) {
-                drawCheckMark(target, states);
+                drawCheckMark(target);
             }
 
-            if(debug) drawDebug(target, states);
+            if(debug) drawDebug(target);
         }
 
         bool handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {
@@ -93,7 +93,7 @@ namespace myui {
         sf::FloatRect innerBox;
         sf::FloatRect outerBox;
 
-        void drawShape(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default){
+        void drawShape(sf::RenderTarget& target){
             sf::RectangleShape box(innerBox.size);
             sf::RectangleShape body(sf::Vector2f(outerBox.size));
 
@@ -128,7 +128,7 @@ namespace myui {
             target.draw(label);
         }
 
-        void drawCheckMark(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default){
+        void drawCheckMark(sf::RenderTarget& target){
             sf::Sprite mark(*checkMark);
 
             sf::Vector2u texSize = checkMark->getSize();

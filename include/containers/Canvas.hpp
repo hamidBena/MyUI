@@ -11,7 +11,7 @@ namespace myui {
             e_padding = {0,0};
         }
 
-        void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
+        void draw(sf::RenderTarget& target) override {
             if(!visible || !enabled) return;
 
             sf::RectangleShape shape(e_size);
@@ -19,7 +19,7 @@ namespace myui {
             shape.setFillColor(e_scheme.background);
             target.draw(shape);
 
-            passDraw(target, states);
+            passDraw(target);
         }
 
         bool handleEvent(const sf::Event& event, const sf::RenderWindow& window) override {

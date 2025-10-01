@@ -9,13 +9,13 @@ namespace myui {
             e_padding = {0,0};
         }
 
-        void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
+        void draw(sf::RenderTarget& target) override {
             if(!visible || !enabled) return;
 
             buffer = sf::RenderTexture(target.getSize());
             buffer = sf::RenderTexture(sf::Vector2u(e_size));
 
-            Container::draw(target, states);
+            Container::draw(target);
             if(e_renderMode == renderMode::SchemeColors){
                 sf::RectangleShape shape(intr_size);
                 shape.setPosition(intr_position);
@@ -33,13 +33,13 @@ namespace myui {
 
             // --- Draw into buffer ---
             buffer.clear(e_scheme.background);
-            passDraw(buffer, states);
+            passDraw(buffer);
             buffer.display();
 
             // --- Draw buffer as sprite ---
             bufferSprite.setTexture(buffer.getTexture(), true);
             bufferSprite.setPosition(e_position);
-            target.draw(bufferSprite, states);
+            target.draw(bufferSprite);
 
         }
 

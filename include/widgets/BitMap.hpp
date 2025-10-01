@@ -10,9 +10,9 @@ namespace myui {
             e_sizeType = sizeTypes::absolute;
         }
 
-        void draw(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default) override {
+        void draw(sf::RenderTarget& target) override {
             if(e_renderMode == renderMode::SchemeColors){
-                drawShape(target, states);
+                drawShape(target);
             }
         }
 
