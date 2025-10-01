@@ -77,7 +77,7 @@ namespace myui {
                 e_size.x / texture.getSize().x,
                 e_size.y / texture.getSize().y
             ));
-            sprite.setPosition(e_position);
+            sprite.setPosition(intr_position);
             target.draw(sprite, states);
 
             // Draw grid lines procedurally over the bitmap

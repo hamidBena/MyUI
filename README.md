@@ -2,8 +2,9 @@
 
 This is a lightweight and extensible GUI (Graphical User Interface) library built with C++ and [SFML (Simple and Fast Multimedia Library)](https://www.sfml-dev.org/). Designed to provide reusable UI components such as buttons, sliders, panels, and more, with a intuitive styling and layout management!
 
-![example 1](assets/pictures/GUI1.JPG)
-![example 2](assets/pictures/GUI2.JPG)
+![example 1](assets/pictures/GUI1.png)
+![example 2](assets/pictures/GUI2.png)
+![example 3](assets/pictures/GUI3.png)
 
 ## Features
 
@@ -20,7 +21,7 @@ This is a lightweight and extensible GUI (Graphical User Interface) library buil
 ## Requirements
 
 - C++17 or higher
-- SFML 2.6.2 or later
+- SFML 3.0.1 or later
 
 ## Getting Started
 
@@ -42,7 +43,7 @@ make
 
 ### 3. Integrate into your project
 ```
-#include "UILibrary.hpp"`
+#include "MyUI.hpp"`
 ```
 
 Example usage in folder "test samples"
