@@ -32,6 +32,7 @@ namespace myui {
 
         private:
         void drawShape(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default){
+            if(!enabled || !visible) return;
             sf::RectangleShape button(e_size);
             button.setPosition(intr_position);
 

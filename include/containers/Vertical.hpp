@@ -25,7 +25,15 @@ namespace myui {
             float y = 0;
             for(auto& child : children){
                 if(!child->enabled || !child->visible) continue;
-                child->setPosition(sf::Vector2f(e_position.x, e_position.y + y) + e_padding);
+
+                if (auto con = dynamic_cast<Container*>(child.get())) {
+                    // child is a Container
+                    con->moveContainer(sf::Vector2f(e_position.x, e_position.y + y) + e_padding);
+                } else {
+                    // child is a normal widget
+                    child->setPosition(sf::Vector2f(e_position.x, e_position.y + y) + e_padding);
+                }
+
                 y += child->e_size.y + spacing;
                 child->sizePass();
             }

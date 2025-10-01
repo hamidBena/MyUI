@@ -64,8 +64,8 @@ namespace myui{
     bool debug = false;
 
     public:
-        Element& setPosition(const sf::Vector2f& position){e_position = position;
-                                         intr_position = position; return *this;}                   sf::Vector2f getPosition() {return e_position;}
+        virtual void setPosition(const sf::Vector2f& position){e_position = position;
+                                         intr_position = position;}                                 sf::Vector2f getPosition() {return e_position;}
 
         Element& setOffset(const sf::Vector2f& offset){e_offset = offset; return *this;}            sf::Vector2f getOffset() {return e_offset;}
         Element& setSize(const sf::Vector2f& size){e_size = size; intr_size = size; return *this;}  sf::Vector2f getSize() {return e_size;}
@@ -115,8 +115,8 @@ namespace myui{
     virtual ~Element() = default; 
     Element() {
         ElementCount++;
-        intr_position.setDuration(0.25f);
-        intr_size.setDuration(0.25f);
+        intr_position.setDuration(0.05f);
+        intr_size.setDuration(0.05f);
 
         intr_size = e_size;
         intr_position = e_position;
@@ -175,6 +175,18 @@ public:
 
     void setDebuggingMode(bool bug) override final{ debug = bug; for (auto& child : children) child->setDebuggingMode(bug); }
 
+    //void setPosition(const sf::Vector2f& newPos) override {
+    //    Element::setPosition(newPos);
+    //    for (auto& child : children)
+    //        child->setPosition(newPos);
+    //}
+
+    void moveContainer(sf::Vector2f pos){
+        auto offset = e_position - pos;
+        setPosition(pos);
+        for (auto& child : children)
+            child->setPosition(child->e_position + offset);
+    }
 };
 
 };

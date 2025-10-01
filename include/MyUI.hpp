@@ -38,6 +38,7 @@ public:
         }
         target.setView(oldView);
     }
+
     void update(const float dt) {
         for (auto& element : elements)
             element->update(dt);

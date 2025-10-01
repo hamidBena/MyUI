@@ -1,47 +1,49 @@
 #include "MyUI.hpp"
 #include <variant>
+#include <chrono>
 #include <iostream>
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({2000u, 1200u}), "MyUI Example");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(120);
 
     myui::GUI myUI;
     
     auto canvas = myUI.createContainer<myui::containers::Canvas>(window);
+    canvas->setPadding({10,10});
 
-    auto Vlayout = canvas->CreateElement<myui::containers::VLayout>();
+    auto bitmap = canvas->CreateElement<myui::widgets::BitMap>(100, 100);
+    bitmap->setOffset({525,50});
+    bitmap->setSize({950,950});
 
-    auto Hlayout = Vlayout->CreateElement<myui::containers::HLayout>();
-    //Hlayout->setEnabled(false);
+    std::vector<unsigned char> data(bitmap->getDataSize());
 
-    //Vlayout->setRenderMode(myui::renderMode::SingleTextureTinted);
-    //Vlayout->setTexture(std::make_unique<sf::Texture>(myui::AssetManager::get().getTexture("textures/CheckMark.png")));
+    auto buttonList = canvas->CreateElement<myui::containers::VLayout>();
 
-    auto button1 = Hlayout->CreateElement<myui::widgets::Button>();
-    button1->setOffset({0, 80});
-    button1->setSizeType(myui::sizeTypes::fitContent);
-
-    auto label1 = Vlayout->CreateElement<myui::widgets::Label>();
-    label1->setLabel("hello this is a labe!\ndoes the multi line work? lets test it out :)");
-
-    auto checkbox1 = Hlayout->CreateElement<myui::widgets::CheckBox>();
-    checkbox1->setOffset({10, 150});
-
-    Vlayout->setOnClick([canvas](myui::Element& widget, const float& dt){
-        widget.e_offset.x += 200 * dt;
+    auto randomize = buttonList->CreateElement<myui::widgets::Button>();
+    randomize->setLabel("randomize");
+    randomize->setOnClick([&bitmap, &data](auto& element, auto& duration){
+        for (size_t i = 0; i < data.size(); i++) {
+            data[i] = static_cast<unsigned char>(rand() % 256);
+        }
+        bitmap->setData(data);
     });
 
-    button1->setOnClick([Vlayout](myui::Element& widget, const float& dt){
-        Vlayout->spacing += 10;
+    auto clear = buttonList->CreateElement<myui::widgets::Button>();
+    clear->setLabel("clear");
+    clear->setOnClick([&bitmap, &data](auto& element, auto& duration){
+        bitmap->clear({50,50,50, 150});
+        data = bitmap->pixels;
     });
 
-    checkbox1->setOnToggle([&canvas](myui::Element& widget, auto& boolean){
-        if(boolean) canvas->setScheme(myui::DefaultSchemes::light());
-        else        canvas->setScheme(myui::DefaultSchemes::dark());
+    bitmap->setOnPress([&bitmap](myui::Element& element, const float& duration){
+        auto idx = bitmap->getHoverIndex();
+        sf::Color randomColor = sf::Color(rand() % 256, rand() % 256, rand() % 256, rand() % 256);
+        bitmap->setPixel(idx%bitmap->width, idx/bitmap->width, randomColor);
     });
 
-    canvas->setDebuggingMode(true);
+
+    //canvas->setDebuggingMode(true);
 
     sf::Clock clock;
     while (window.isOpen()) {

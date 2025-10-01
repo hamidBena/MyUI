@@ -92,21 +92,19 @@ namespace myui{
     */
 
     void Element::layoutPass() {
-        if(parent)
-            setPosition(parent->e_position + parent->e_padding + e_offset);
-        else 
-            setPosition(e_offset);
+        if(parent) setPosition(parent->e_position + parent->e_padding + e_offset);
+        else       setPosition(e_offset);
         sizePass();
     }
 
     void Element::drawDebug(sf::RenderTarget& target, sf::RenderStates states) {
+        if(!enabled || !visible) return;
         static sf::Color hover = {0, 0, 200, 100};
         static sf::Color disable = {200, 0, 0, 100};
         static sf::Color idle = sf::Color::Transparent;
         //hitbox info
         sf::RectangleShape hitbox(getBounds().size);
         hitbox.setPosition(intr_position);
-        hitbox.setFillColor(sf::Color::Transparent);
         hitbox.setOutlineColor(sf::Color::Red);
         hitbox.setOutlineThickness(1);
 

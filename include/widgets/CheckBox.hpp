@@ -64,7 +64,7 @@ namespace myui {
 
         void setScheme(const ColorScheme& scheme) override {
             Element::setScheme(scheme);
-            if(e_scheme == DefaultSchemes::dark()){
+            if(e_scheme == DefaultSchemes::dark() || e_scheme == DefaultSchemes::Blue()){
                 checkMark = std::make_unique<sf::Texture>(AssetManager::get().getTexture("textures/CheckMark2.png"));
             }else{
                 checkMark = std::make_unique<sf::Texture>(AssetManager::get().getTexture("textures/CheckMark.png"));
