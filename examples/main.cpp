@@ -10,37 +10,35 @@ int main() {
     myui::GUI myUI;
     
     auto canvas = myUI.createContainer<myui::containers::Canvas>(window);
-    canvas->setPadding({10,10});
 
-    auto bitmap = canvas->CreateElement<myui::widgets::BitMap>(100, 100);
-    bitmap->setOffset({525,50});
-    bitmap->setSize({950,950});
+    auto HLayout = canvas->CreateElement<myui::containers::VLayout>();
+    HLayout->setOffset({500,200});
 
-    std::vector<unsigned char> data(bitmap->getDataSize());
+    auto scroll1 = HLayout->CreateElement<myui::containers::VScroll>();
+    scroll1->height = 100;
+    auto scroll2 = HLayout->CreateElement<myui::containers::HScroll>();
+    scroll2->width = 220;
 
-    auto buttonList = canvas->CreateElement<myui::containers::VLayout>();
+    auto buttonList1 = scroll1->CreateElement<myui::containers::VLayout>();
+    auto buttonList2 = scroll2->CreateElement<myui::containers::HLayout>();
 
-    auto randomize = buttonList->CreateElement<myui::widgets::Button>();
-    randomize->setLabel("randomize");
-    randomize->setOnClick([&bitmap, &data](auto& element, auto& duration){
-        for (size_t i = 0; i < data.size(); i++) {
-            data[i] = static_cast<unsigned char>(rand() % 256);
-        }
-        bitmap->setData(data);
-    });
+    auto button1 = buttonList2->CreateElement<myui::widgets::Button>();
+    auto button2 = buttonList2->CreateElement<myui::widgets::Button>();
+    auto button3 = buttonList2->CreateElement<myui::widgets::Button>();
+    auto button4 = buttonList2->CreateElement<myui::widgets::Button>();
 
-    auto clear = buttonList->CreateElement<myui::widgets::Button>();
-    clear->setLabel("clear");
-    clear->setOnClick([&bitmap, &data](auto& element, auto& duration){
-        bitmap->clear({50,50,50, 150});
-        data = bitmap->pixels;
-    });
+    auto bitmap = buttonList1->CreateElement<myui::widgets::BitMap>(10, 10);
+    bitmap->setSize({200, 200});
 
-    bitmap->setOnPress([&bitmap](myui::Element& element, const float& duration){
+    bitmap->setOnPress([&bitmap](auto& element, auto& duration){
         auto idx = bitmap->getHoverIndex();
-        sf::Color randomColor = sf::Color(rand() % 256, rand() % 256, rand() % 256, rand() % 256);
-        bitmap->setPixel(idx%bitmap->width, idx/bitmap->width, randomColor);
+        std::cout<<bitmap->hoverX<<", "<<bitmap->hoverY<<std::endl;
+
+        sf::Color colorRND = sf::Color(rand() % 255, rand() % 255, rand() % 255, 255);
+        
+        bitmap->setPixel(idx%bitmap->width, idx/bitmap->height, colorRND);
     });
+
 
 
     //canvas->setDebuggingMode(true);

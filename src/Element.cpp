@@ -23,15 +23,14 @@ namespace myui{
 
     bool Element::handleEvent(const sf::Event& event, const sf::RenderWindow& window) {
         if(!enabled) return false;
-        if (event.is<sf::Event::MouseMoved>()) {
-            if (auto* data = event.getIf<sf::Event::MouseMoved>()) {
-                if (!hovered && getBounds().contains(sf::Vector2f(data->position))) {
-                    hovered = true;
-                    if (onMouseEnter) onMouseEnter(*this);
-                } else if (hovered && !getBounds().contains(sf::Vector2f(data->position))) {
-                    hovered = false;
-                    if (onMouseLeave) onMouseLeave(*this);
-                }
+
+        if (auto data = event.getIf<sf::Event::MouseMoved>()) {
+            if (!hovered && getBounds().contains(sf::Vector2f(data->position))) {
+                hovered = true;
+                if (onMouseEnter) onMouseEnter(*this);
+            } else if (hovered && !getBounds().contains(sf::Vector2f(data->position))) {
+                hovered = false;
+                if (onMouseLeave) onMouseLeave(*this);
             }
         }
 

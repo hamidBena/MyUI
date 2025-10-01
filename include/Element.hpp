@@ -185,7 +185,8 @@ public:
         auto offset = e_position - pos;
         setPosition(pos);
         for (auto& child : children)
-            child->setPosition(child->e_position + offset);
+            if(auto con = dynamic_cast<Container*>(child.get())) con->moveContainer(child->e_position - offset);
+            else child->setPosition(child->e_position - offset);
     }
 };
 
