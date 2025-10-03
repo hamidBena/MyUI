@@ -79,9 +79,7 @@ int main() {
     });
 
     canvas->setScheme(myui::DefaultSchemes::light());
-
-
-
+    
     //canvas->setDebuggingMode(true);
 
     sf::Clock clock;

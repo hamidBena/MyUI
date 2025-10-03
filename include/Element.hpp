@@ -64,11 +64,9 @@ namespace myui{
     bool debug = false;
 
     public:
-        virtual void setPosition(const sf::Vector2f& position){e_position = position;
-                                         intr_position = position;}                                 sf::Vector2f getPosition() {return e_position;}
-
+        virtual void setPosition(const sf::Vector2f& position){e_position = position;}              sf::Vector2f getPosition() {return e_position;}
         Element& setOffset(const sf::Vector2f& offset){e_offset = offset; return *this;}            sf::Vector2f getOffset() {return e_offset;}
-        Element& setSize(const sf::Vector2f& size){e_size = size; intr_size = size; return *this;}  sf::Vector2f getSize() {return e_size;}
+        Element& setSize(const sf::Vector2f& size){e_size = size; return *this;}  sf::Vector2f getSize() {return e_size;}
         Element& setPadding(const sf::Vector2f& padding){e_padding = padding; return *this;}        sf::Vector2f getPadding() {return e_padding;}
         Element& setSizeType(const sizeTypes& type){e_sizeType = type; return *this;}               sizeTypes getSizeType() {return e_sizeType;}
         virtual void setScheme(const ColorScheme& scheme){e_scheme = scheme;}                       ColorScheme getScheme() {return e_scheme;}
@@ -111,6 +109,11 @@ namespace myui{
     }
 
     virtual void drawDebug(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
+
+    virtual void updateInterpolators(){
+        intr_position.setValue(e_position);
+        intr_size.setValue(e_size);
+    }
 
     virtual ~Element() = default; 
     Element() {
@@ -167,6 +170,12 @@ public:
             child->layoutPass();
     }
 
+    void updateInterpolators() override {
+        Element::updateInterpolators();
+        for (auto& child : children)
+            child->updateInterpolators();
+    }
+
     void setScheme(const ColorScheme& scheme) override {
         e_scheme = scheme;
         for (auto& child : children)
@@ -174,12 +183,6 @@ public:
     }
 
     void setDebuggingMode(bool bug) override final{ debug = bug; for (auto& child : children) child->setDebuggingMode(bug); }
-
-    //void setPosition(const sf::Vector2f& newPos) override {
-    //    Element::setPosition(newPos);
-    //    for (auto& child : children)
-    //        child->setPosition(newPos);
-    //}
 
     void moveContainer(sf::Vector2f pos){
         auto offset = e_position - pos;

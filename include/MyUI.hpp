@@ -34,6 +34,7 @@ public:
         target.setView(uiView);
         for (auto& element : elements){
             element->layoutPass();
+            element->updateInterpolators();
             element->draw(target, states);
         }
         target.setView(oldView);

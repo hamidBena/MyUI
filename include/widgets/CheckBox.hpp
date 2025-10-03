@@ -58,10 +58,6 @@ namespace myui {
 
         }
 
-        sf::FloatRect getBounds() override {
-            return innerBox;
-        }
-
         void setScheme(const ColorScheme& scheme) override {
             Element::setScheme(scheme);
             if(e_scheme == DefaultSchemes::dark() || e_scheme == DefaultSchemes::Blue()){
@@ -141,7 +137,7 @@ namespace myui {
             float scaleY = innerBox.size.y / texH;
 
             mark.setScale(sf::Vector2f(scaleX, scaleY));
-            mark.setPosition(innerBox.position);
+            mark.setPosition(e_position);
 
             if(hovered) mark.setColor(e_tintScheme.hover);
             else mark.setColor(e_tintScheme.foreground);
