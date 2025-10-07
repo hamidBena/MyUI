@@ -1,0 +1,22 @@
+@PACKAGE_INIT@
+
+# MyUI CMake configuration file
+
+set(MYUI_VERSION "@MYUI_VERSION@")
+
+# Set up import targets
+include("${CMAKE_CURRENT_LIST_DIR}/MyUITargets.cmake")
+
+# Provide legacy variables for compatibility
+set(MyUI_FOUND TRUE)
+set(MYUI_VERSION_STRING "@MYUI_VERSION@")
+set(MYUI_LIBRARIES MyUI)
+set(MYUI_INCLUDE_DIRS "@CMAKE_INSTALL_FULL_INCLUDEDIR@")
+
+# Check required components
+check_required_components(MyUI)
+
+# Display found message for user feedback
+if(NOT MyUI_FIND_QUIETLY)
+    message(STATUS "Found MyUI: ${MYUI_VERSION} (${CMAKE_CURRENT_LIST_DIR})")
+endif()

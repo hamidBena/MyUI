@@ -19,7 +19,7 @@ int main() {
     auto sideButtons = sideButtonsScroll->CreateElement<myui::containers::VLayout>();
 
     auto Panel2 = HLayout->CreateElement<myui::containers::VLayout>();
-    auto bitmap = Panel2->CreateElement<myui::widgets::BitMap>(60, 60);
+    auto bitmap = Panel2->CreateElement<myui::widgets::BitMap>(120, 120);
     bitmap->setOffset({10,10});
     auto scroll2 = Panel2->CreateElement<myui::containers::HScroll>();
     scroll2->width = 500;
