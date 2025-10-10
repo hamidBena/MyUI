@@ -7,6 +7,8 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({2000u, 1200u}), "MyUI Example");
     window.setFramerateLimit(120);
 
+
+    
     myui::GUI myUI;
     
     auto canvas = myUI.createContainer<myui::containers::Canvas>(window);
