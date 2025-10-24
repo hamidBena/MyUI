@@ -6,6 +6,7 @@ namespace myui{
 
 fs::path AssetManager::asset_dir = [] {
     fs::path current = env::exe_dir();
+    int depth = 0;
     while (!current.empty()) {
         fs::path try_path = current / "assets";
         if (fs::exists(try_path) && fs::is_directory(try_path)) {
@@ -13,6 +14,7 @@ fs::path AssetManager::asset_dir = [] {
             return try_path;
         }
         current = current.parent_path();
+        if(++depth > 10) break; // Prevent infinite scan
     }
     throw std::runtime_error("Could not locate 'assets/' directory.");
 }();
